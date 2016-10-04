@@ -16,4 +16,11 @@ class Tests_Plugins_present extends WP_UnitTestCase {
 		$this->assertEquals(true, true);
 	}
 
+	function test_always_fails() {
+		$this->assertEquals(true, false);
+	}
+
+	function test_not_a_test() {
+	}
+
 }
