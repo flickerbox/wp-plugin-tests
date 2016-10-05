@@ -1,5 +1,8 @@
 <?php
-class Tests_Plugins_present extends WP_UnitTestCase {
+/**
+ * This test allows you to validate local setup of test environment is successful by performing a test that always passes
+ */
+class Tests_Plugins_AlwaysPass extends WP_UnitTestCase {
 	protected $user_id;
 
 	function setUp() {
@@ -15,12 +18,4 @@ class Tests_Plugins_present extends WP_UnitTestCase {
 	function test_always_passes() {
 		$this->assertEquals(true, true);
 	}
-
-	function test_always_fails() {
-		$this->assertEquals(true, false);
-	}
-
-	function test_not_a_test() {
-	}
-
 }
