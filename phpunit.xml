@@ -1,0 +1,21 @@
+<phpunit
+        bootstrap="bootstrap.php"
+        backupGlobals="false"
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+>
+    <testsuites>
+        <testsuite>
+            <directory suffix=".php">./</directory>
+            <directory suffix=".php">./flickerbox-themes</directory>
+        </testsuite>
+
+        <!-- flickerbox-themes test suite -->
+        <testsuite name="flickerbox-themes">
+            <directory prefix="test-" suffix=".php">./flickerbox-themes</directory>
+        </testsuite>
+    </testsuites>
+
+</phpunit>

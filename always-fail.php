@@ -2,7 +2,8 @@
 /**
  * For demonstration purposes this test always fails
  *
- * @group flickerbox
+ * @group flickerbox-test
+ * @group flickerbox-test-fail
  */
 class Tests_Plugins_AlwaysFail extends WP_UnitTestCase {
 
