@@ -8,7 +8,7 @@
 class Tests_Plugins_AlwaysPass extends WP_UnitTestCase {
 
 	function test_always_passes() {
-		$this->assertEquals(true, true);
+		$this->assertTrue(true);
 	}
 
 }

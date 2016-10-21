@@ -1,38 +1,36 @@
 <?php
-
-// Path to /WPROOT/tests/phpunit/
-
+/**
+ * Global paths
+ *
+ * TESTPATH - Path to WordPress PHPUnit tests
+ * ABSPATH - Path to codebase of the plugins you want to test
+ */
 define( 'TESTPATH', realpath(__DIR__ . '/../../') . '/tests/phpunit/');
-define( 'SRCPATH', '/Users/ccarlevato/Sites/com.flickerbox.labs/' );
+
+if (!defined('ABSPATH')) {
+	define( 'ABSPATH', '/Users/ccarlevato/Sites/com.flickerbox.labs/' );
+}
 
 /**
- * The WordPress tests functions.
- *
- * We are loading this so that we can add our tests filter
- * to load the plugin, using tests_add_filter().
+ * The WordPress tests functions, enables tests_add_filter().
  */
 require_once  TESTPATH . 'includes/functions.php';
 
 /**
- * Manually load the plugin main file.
- *
- * The plugin won't be activated within the test WP environment,
- * that's why we need to load it manually.
- *
- * You will also need to perform any installation necessary after
- * loading your plugin, since it won't be installed.
+ * Load main files for all plugins to be tested
  */
-function _manually_load_plugin() {
+function _load_plugin() {
 
-	// require your plugin files for any plugins to be tested here.
+	// Third Party Plugins
+	require ABSPATH . '/wp-content/mu-plugins/advanced-custom-fields-pro/acf.php';
 
-	require SRCPATH . '/wp-content/mu-plugins/flickerbox-themes/flickerbox-themes.php';
+	// Our Plugins
+	require ABSPATH . '/wp-content/mu-plugins/flickerbox-themes/flickerbox-themes.php';
 
-	// Make sure plugin is installed here ...
 }
-tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
+tests_add_filter( 'muplugins_loaded', '_load_plugin' );
 
 /**
- * Sets up the WordPress test environment.
+ * Set up the WordPress test environment
  */
 require_once TESTPATH . 'includes/bootstrap.php';
