@@ -96,16 +96,15 @@ class Tests_Plugins_FlickerboxThemesIntegration extends WP_UnitTestCase {
 		$image_id = $this->_make_attachment($upload);
 		$attachment_url = @wp_get_attachment_image_url($image_id, 'fullsize');
 
+		// Change background style to image and validate change
+		update_field($fields['background_style'], 'image', $cta->ID);
+		$this->assertEquals('image', get_field('background_style', $cta->ID));
 
-//		//TODO: update background image to uploaded image and validate
-//
-//		// Change background style to image and set active background to uploaded image id
-//		update_field($fields['background_style'], 'image', $cta->ID);
-//		update_sub_field('image', $image_id, $cta->ID);
-
-		$this->markTestIncomplete(
-			'Test incomplete, see TODO.'
-		);
+		// Set background image to uploaded image and validate
+		update_field('background_images', array('images_0' => $image_id), $cta->ID);
+		$background_images = get_field('background_images', $cta->ID);
+		$background_url = @wp_get_attachment_image_url($background_images['images_0'], 'fullsize');
+		$this->assertEquals($attachment_url, $background_url);
 	}
 
 	/**
@@ -113,17 +112,38 @@ class Tests_Plugins_FlickerboxThemesIntegration extends WP_UnitTestCase {
 	 */
 	function test_cta_post_relationship(){
 
+		// Create and validate test CTA post
 		$test_object = get_post_type_object(sprintf('%s--cta', \FB_Themes\Core::config('prefix')));
+		$cta = self::factory()->post->create_and_get( array('post_type' => $test_object->name) );
+		$this->assertInstanceOf('WP_Post', $cta);
+		$this->assertEquals(sprintf('%s--cta', \FB_Themes\Core::config('prefix')), $cta->post_type);
 
-//		// Create a new post to associate with our CTA
-//		$id = self::factory()->post->create( $test_object->name );
-//		$post = get_post( $id );
-//		$this->assertInstanceOf( 'WP_Post', $post );
-//		$this->assertEquals( $id, $post->ID );
+		// Create and validate a new page
+		$post = self::factory()->post->create_and_get( array('post_type' => 'page') );
+		$this->assertInstanceOf('WP_Post', $post);
+		$this->assertEquals('page', $post->post_type);
 
-		$this->markTestIncomplete(
-			'Test not built yet.'
-		);
+		// Get CTA relationship fields for updating
+		$test_group = 'group_call_to_action_relationship';
+		$fields = array();
+
+		// Retrieve CTA edit custom fields and organize for testing
+		foreach(acf_get_fields($test_group) as $field){
+			$fields[$field['name']] = $field['key'];
+		}
+
+		// Confirm all required fields are present (Currently just 1)
+		$this->assertTrue(array_key_exists('call_to_action', $fields));
+
+		// Verify the post doesn't have a CTA
+		$this->assertEquals('', get_field('call_to_action', $post->ID));
+
+		// Set post's CTA to the test CTA
+		update_field($fields['call_to_action'], $cta->ID, $post->ID);
+
+		// Validate relationship between CTA and page was successful
+		$assigned_cta = get_field('call_to_action', $post->ID);
+		$this->assertEquals($cta->ID, $assigned_cta[0]->ID);
 	}
 
 }
